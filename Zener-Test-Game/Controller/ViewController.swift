@@ -13,11 +13,18 @@ class ViewController: UIViewController {
     
     var allCards = [CardViewController]()
 
+    @IBOutlet weak var gradientView: GradientView!
     @IBOutlet weak var cardContainer: UIView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         loadCards()
+        
+        view.backgroundColor = UIColor.red
+        
+        UIView.animate(withDuration: 20, delay: 0, options: [.allowUserInteraction, .autoreverse, .repeat], animations: {
+            self.view.backgroundColor = UIColor.blue
+        }, completion: nil)
     }
 
     @objc
