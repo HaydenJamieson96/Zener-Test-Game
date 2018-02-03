@@ -71,7 +71,26 @@ class ViewController: UIViewController {
             // add new card vc to array for easier tracking
             allCards.append(card)
         }
+        view.isUserInteractionEnabled = true
     }
+    
+    func cardTapped(_ tapped: CardViewController) {
+        guard view.isUserInteractionEnabled == true else {return}
+        view.isUserInteractionEnabled = false
+        
+        for card in allCards {
+            if card == tapped {
+                card.wasTapped()
+                card.perform(#selector(card.wasntTapped), with: nil, afterDelay: 1)
+            } else {
+                card.wasntTapped()
+            }
+        }
+        
+        perform(#selector(loadCards), with: nil, afterDelay: 2)
+    }
+    
+   
 
 }
 
