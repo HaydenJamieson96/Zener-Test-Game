@@ -8,10 +8,12 @@
 
 import UIKit
 import GameplayKit
+import AVFoundation
 
 class ViewController: UIViewController {
     
     var allCards = [CardViewController]()
+    var music: AVAudioPlayer!
 
     @IBOutlet weak var gradientView: GradientView!
     @IBOutlet weak var cardContainer: UIView!
@@ -26,7 +28,7 @@ class ViewController: UIViewController {
         UIView.animate(withDuration: 20, delay: 0, options: [.allowUserInteraction, .autoreverse, .repeat], animations: {
             self.view.backgroundColor = UIColor.blue
         }, completion: nil)
-        
+        playMusic()
     }
 
     @objc
@@ -122,6 +124,34 @@ class ViewController: UIViewController {
         particleEmitter.emitterCells = [cell]
         
         gradientView.layer.addSublayer(particleEmitter)
+    }
+    
+    func playMusic() {
+        if let musicURL = Bundle.main.url(forResource: "PhantomFromSpace", withExtension: "mp3") {
+            if let audioPlayer = try? AVAudioPlayer(contentsOf: musicURL) {
+                music = audioPlayer
+                music.numberOfLoops = -1
+                music.play()
+            }
+        }
+    }
+    
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesMoved(touches, with: event)
+        
+        guard let touch = touches.first else {return}
+        let location = touch.location(in: cardContainer)
+        
+        for card in allCards {
+            if card.view.frame.contains(location) {
+                if view.traitCollection.forceTouchCapability == .available {
+                    if touch.force == touch.maximumPossibleForce {
+                        card.front.image = UIImage(named: "cardStar")
+                        card.isCorrect = true
+                    }
+                }
+            }
+        }
     }
     
    
